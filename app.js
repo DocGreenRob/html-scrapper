@@ -41,9 +41,11 @@ app.post('/images', jsonParser, function(req, res) {
             console.log('parse results', dateTime.getMilliseconds());
             $('img').each(function(i, element) {
                 var a = $(this);
-
-                console.log(title);
                 var image = a.attr('src');
+                var width = a.attr('width');
+                var height = a.attr('height');
+                console.log('width', width);
+                return;
                 //avoid data image urls because of the size---avaerage size of image url is 150
                 if (image != undefined && image.length < 150) {
                     let filtergGif = image.endsWith('gif');
@@ -56,9 +58,16 @@ app.post('/images', jsonParser, function(req, res) {
                         if(imageUrls.indexOf(image) === -1
                         && image.length > 0){
                             if(image[0] === '/' && image[1] === '/'){
+                                // ace hardware
                                 image = `https:${image}`;
+                            }else if(image.indexOf('/assets') !== 0){
+                                // lumber liquidators returns "/assets/images/ada/category-images/200x412_butcher_block.jpg",
+                                // which doesn't resolve when prepended with the url
+                                // also they seem like category - complimentary - images
+                                console.log('------------------------------------');
+                                //continue;
+                                imageUrls.push(image);
                             }
-                            imageUrls.push(image);
                         }
                     }
                 }
