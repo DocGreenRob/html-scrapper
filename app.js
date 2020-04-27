@@ -55,7 +55,7 @@ app.post('/images', jsonParser, function(req, res) {
             if (title.includes('amazon')) {
                 imageUrls = imageUrls.map(x => {
 
-                    if (!x.includes('https://m.media-amazon.com/images/S/')) {
+                    if (x.includes('https://m.media-amazon.com/images/S/')) {
                         return x;
                     } else {
                         return null;
