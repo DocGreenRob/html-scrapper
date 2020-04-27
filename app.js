@@ -51,16 +51,20 @@ app.post('/images', jsonParser, function(req, res) {
 
             });
             //additional filters for specific domains
-
+            //amazon filter
             if (title.includes('amazon')) {
-                imageUrls = imageUrls.map(x => {
+                let images = imageUrls;
+                imageUrls = [];
+                images.map(x => {
 
                     if (x.includes('https://m.media-amazon.com/images/S/')) {
-                        return x;
-                    } else {
-                        return null;
+                        imageUrls.push(x);
                     }
-                })
+                });
+                console.log(images);
+                if (imageUrls.length == 0) {
+                    imageUrls = images;
+                }
             }
 
 
