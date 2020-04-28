@@ -72,7 +72,6 @@ app.post('/images', jsonParser, function(req, res) {
                         return domain;
                     }
                     image = "https://" + extractDomain(url) + "/" + image;
-
                 }
 
                 console.log(image);
@@ -122,7 +121,7 @@ app.post('/images', jsonParser, function(req, res) {
                 imageUrls = [];
                 images.map(x => {
                     if (x.includes('webcontent')) {
-                        imageUrls.push("https://www.gap.com/" + x)
+                        imageUrls.push("https://www.gap.com/" + x);
                     }
 
                 })
@@ -141,7 +140,7 @@ app.post('/images', jsonParser, function(req, res) {
                     if (!x.startsWith('/')) {
                         imageUrls.push(x);
                     }
-                })
+                });
             }
 
             //arizona tiles
@@ -152,11 +151,10 @@ app.post('/images', jsonParser, function(req, res) {
                     if (x.startsWith('/') && !x.includes('Assets') && !x.includes('media/icons')) {
                         imageUrls.push('https://www.arizonatile.com/' + x);
                     }
-                })
+                });
             }
 
             //lumber liquitdators
-
             if (url.includes('lumberliquidators.com')) {
                 let images = imageUrls;
                 imageUrls = [];
@@ -182,10 +180,6 @@ app.post('/images', jsonParser, function(req, res) {
                     });
                 }
             }
-
-
-
-
 
             //return object
             let returnObj = {
