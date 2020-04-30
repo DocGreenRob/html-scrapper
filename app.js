@@ -49,32 +49,35 @@ app.post('/images', jsonParser, function(req, res) {
                 if (image == undefined) {
                     image = a.attr('data-src');
                 }
-                if (image.startsWith('/') || !image.startsWith('h')) {
+                console.log(image)
+                if (image != undefined) {
 
-                    let url = req.body.url;
-                    var extractDomain = (url) => {
-                        var domain;
-                        //find & remove protocol (http, ftp, etc.) and get domain
-                        if (url.indexOf("://") > -1) {
-                            domain = url.split('/')[2];
-                        } else {
-                            domain = url.split('/')[0];
+                    if (!image.startsWith('//') && !image.startsWith('h')) {
+                        let url = req.body.url;
+                        var extractDomain = (url) => {
+                            var domain;
+                            //find & remove protocol (http, ftp, etc.) and get domain
+                            if (url.indexOf("://") > -1) {
+                                domain = url.split('/')[2];
+                            } else {
+                                domain = url.split('/')[0];
+                            }
+
+                            //find & remove www
+                            if (domain.indexOf("www.") > -1) {
+                                domain = domain.split('www.')[1];
+                            }
+
+                            domain = domain.split(':')[0]; //find & remove port number
+                            domain = domain.split('?')[0]; //find & remove url params
+
+                            return domain;
                         }
+                        image = "https://" + extractDomain(url) + "/" + image;
 
-                        //find & remove www
-                        if (domain.indexOf("www.") > -1) {
-                            domain = domain.split('www.')[1];
-                        }
-
-                        domain = domain.split(':')[0]; //find & remove port number
-                        domain = domain.split('?')[0]; //find & remove url params
-
-                        return domain;
                     }
-                    image = "https://" + extractDomain(url) + "/" + image;
 
                 }
-
                 console.log(image);
                 //avoid data image urls because of the size---avaerage size of image url is 150
                 if (image != undefined && image.length < 150 && !image.startsWith('data:image') && !image.includes('logo')) {
@@ -149,8 +152,8 @@ app.post('/images', jsonParser, function(req, res) {
                 let images = imageUrls;
                 imageUrls = [];
                 images.map(x => {
-                    if (x.startsWith('/') && !x.includes('Assets') && !x.includes('media/icons')) {
-                        imageUrls.push('https://www.arizonatile.com/' + x);
+                    if (!x.includes('Assets') && !x.includes('media/icons')) {
+                        imageUrls.push(x);
                     }
                 })
             }
@@ -182,6 +185,60 @@ app.post('/images', jsonParser, function(req, res) {
                     });
                 }
             }
+
+            //POSTFLOR
+            if (url.includes('postflor.com') || url.includes('flor.com')) {
+                let images = imageUrls;
+                imageUrls = [];
+                $('.image').each(function(k, element) {
+                    var florImage = $(this);
+
+                    imageUrls.push(florImage.attr('data-thumb'))
+                });
+                console.log('data thumb')
+                if (imageUrls.length == 0) {
+                    imageUrls = images.map(x => {
+                        return x;
+                    });
+                }
+            }
+
+            //ashley furnitures
+            if (url.includes('ashleyfurniture.com')) {
+                let images = imageUrls;
+                imageUrls = [];
+
+                images.map(x => {
+                    if (!x.includes('static')) {
+                        imageUrls.push(x);
+                    }
+                });
+            }
+
+            //william sonoma
+
+            if (url.includes('williams-sonoma.com')) {
+                console.log($('#pipHeroAnchor').html());
+                $('#pipHeroAnchor').each((k, element) => {
+                    var florImage = $(this);
+                    console.log(florImage.attr('data-overlaydata'));
+                })
+
+            }
+
+            //Montana Supply Corporation
+            if (url.includes('mountainsupply.com')) {
+                let images = imageUrls;
+                imageUrls = [];
+                images.map(x => {
+                    if (x.includes('categories')) {
+                        imageUrls.push(x);
+                    }
+                });
+            }
+
+
+
 
 
 
