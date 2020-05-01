@@ -116,7 +116,7 @@ var loadBodyAndFilter = (data, url) => {
         if (image != undefined) {
 
             if (!image.startsWith('//') && !image.startsWith('h')) {
-                let url = url;
+
                 var extractDomain = (url) => {
                     var domain;
                     //find & remove protocol (http, ftp, etc.) and get domain
