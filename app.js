@@ -1,19 +1,19 @@
 const express = require('express');
 const cheerio = require('cheerio');
 const fetch = require('node-fetch');
+const fetchProxy = require('fetch-with-proxy');
 const port = 3000;
-const psl = require('psl');
-var bodyParser = require('body-parser')
+var bodyParser = require('body-parser');
 var cors = require('cors');
 var app = express();
 //use json parser
 var jsonParser = bodyParser.json();
 
+
 app.use(cors());
 app.post('/images', jsonParser, function(req, res) {
     console.log(req.body);
     let url = req.body.url;
-
     fetch(url)
         .then(res => res.text())
         .then(async body => {
@@ -237,12 +237,23 @@ app.post('/images', jsonParser, function(req, res) {
                 });
             }
 
+            //carpet one filter
+            if (url.includes('conlins.com')) {
+                let images = imageUrls;
+                imageUrls = [];
+                images.map(x => {
+                    if (!x.includes('../..')) {
+                        imageUrls.push(x);
+                    }
+                });
+                if (imageUrls.length == 0) {
+                    imageUrls = images.map(x => {
+                        return x;
+                    });
+                }
+            }
 
-
-
-
-
-
+            //
 
             //return object
             let returnObj = {
@@ -252,9 +263,13 @@ app.post('/images', jsonParser, function(req, res) {
 
             res.send(returnObj);
 
-        }).catch(err => {
-            console.error(err);
-            res.send("eor");
+        }).catch(async err => {
+            //proxy requests on catching an error
+            fetchProxy(url)
+                .then((response) => response.text())
+                .then(console.log)
+                .catch(console.error);
+
         });
 });
 
